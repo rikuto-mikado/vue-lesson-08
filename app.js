@@ -8,14 +8,16 @@ const app = Vue.createApp({
         }
     },
     methods: {
-        // Method to handle box selection - sets the corresponding box's selected flag to true based on the box parameter
+        // Method to handle box selection - toggles the corresponding box's selected state
+        // Using ! (NOT operator) to toggle: if true becomes false, if false becomes true
+        // This allows clicking the same box again to deselect it
         boxSelected(box) {
             if (box === 'A') {
-                this.boxASelected = true;
+                this.boxASelected = !this.boxASelected;
             } else if (box === 'B') {
-                this.boxBSelected = true;
+                this.boxBSelected = !this.boxBSelected;
             } else if (box === 'C') {
-                this.boxCSelected = true;
+                this.boxCSelected = !this.boxCSelected;
             }
         }
     }

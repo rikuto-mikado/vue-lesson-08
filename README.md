@@ -55,6 +55,9 @@
 
 <!-- ✅ More readable: Object syntax -->
 <div :class="{demo: true, active: boxASelected}"></div>
+
+<!-- ✨ Best practice: Combine static 'class' with dynamic ':class' -->
+<div class="demo" :class="{active: boxASelected}"></div>
 ```
 
 #### Object syntax breakdown
@@ -64,6 +67,28 @@
   active: boxASelected  // 'active' class applied only when boxASelected is true
 }
 ```
+
+#### Why use both `class` and `:class`?
+
+When you have **static classes** (always applied) and **dynamic classes** (conditionally applied), you can use both attributes together:
+
+```html
+<!-- Static class: demo (always applied) -->
+<!-- Dynamic class: active (only when boxASelected is true) -->
+<div class="demo" :class="{active: boxASelected}"></div>
+```
+
+**Benefits:**
+- Clearer intent: static vs dynamic classes are separated
+- Cleaner code: no need to include `demo: true` in the object
+- Better readability: you instantly see which classes are always there
+
+**Comparison:**
+
+| Approach | Code |
+|----------|------|
+| Only `:class` | `<div :class="{demo: true, active: boxASelected}"></div>` |
+| Both `class` + `:class` ✨ | `<div class="demo" :class="{active: boxASelected}"></div>` |
 
 ---
 
@@ -82,6 +107,51 @@
 
 ---
 
+### 5. Toggle Boolean Values with `!` (NOT Operator)
+
+The `!` operator inverts a boolean value:
+
+```javascript
+// If the value is true, it becomes false
+// If the value is false, it becomes true
+this.boxASelected = !this.boxASelected;
+```
+
+#### Use Case: Toggle Selection
+
+```javascript
+// Before: Only selecting (one-way)
+boxSelected(box) {
+    if (box === 'A') {
+        this.boxASelected = true;  // Can only select, not deselect
+    }
+}
+
+// After: Toggle (two-way)
+boxSelected(box) {
+    if (box === 'A') {
+        this.boxASelected = !this.boxASelected;  // Can select AND deselect
+    }
+}
+```
+
+**Comparison:**
+
+| Approach | Behavior | Code |
+|----------|----------|------|
+| Set to `true` | Click once to select, can't deselect | `this.boxASelected = true` |
+| Toggle with `!` ✨ | Click to select, click again to deselect | `this.boxASelected = !this.boxASelected` |
+
+**Example:**
+```
+Initial state: boxASelected = false
+Click 1: boxASelected = !false → true (selected)
+Click 2: boxASelected = !true → false (deselected)
+Click 3: boxASelected = !false → true (selected again)
+```
+
+---
+
 ## Complete Example
 
 ```javascript
@@ -96,12 +166,13 @@ const app = Vue.createApp({
     },
     methods: {
         boxSelected(box) {
+            // Toggle the selection state using ! (NOT operator)
             if (box === 'A') {
-                this.boxASelected = true;
+                this.boxASelected = !this.boxASelected;  // true → false, false → true
             } else if (box === 'B') {
-                this.boxBSelected = true;
+                this.boxBSelected = !this.boxBSelected;
             } else if (box === 'C') {
-                this.boxCSelected = true;
+                this.boxCSelected = !this.boxCSelected;
             }
         }
     }
@@ -110,9 +181,9 @@ const app = Vue.createApp({
 
 ```html
 <!-- index.html -->
-<div :class="{demo: true, active: boxASelected}" @click="boxSelected('A')"></div>
-<div :class="{demo: true, active: boxBSelected}" @click="boxSelected('B')"></div>
-<div :class="{demo: true, active: boxCSelected}" @click="boxSelected('C')"></div>
+<div class="demo" :class="{active: boxASelected}" @click="boxSelected('A')"></div>
+<div class="demo" :class="{active: boxBSelected}" @click="boxSelected('B')"></div>
+<div class="demo" :class="{active: boxCSelected}" @click="boxSelected('C')"></div>
 ```
 
 ---
@@ -124,6 +195,7 @@ const app = Vue.createApp({
 | Why `:style` requires JavaScript object syntax instead of CSS? | Vue evaluates the expression as JavaScript, not CSS |
 | Ternary operator vs object syntax for `:class` | Use object syntax for better readability |
 | When to use quotes in Vue bindings | Use quotes when you need a string literal instead of a variable |
+| How to allow users to deselect a box after selecting it | Use `!` operator to toggle: `this.boxASelected = !this.boxASelected` |
 
 ---
 
@@ -131,4 +203,6 @@ const app = Vue.createApp({
 
 1. **Use shorthands:** `@` for `v-on:`, `:` for `v-bind:`
 2. **Prefer object syntax for `:class`** - it's more readable and maintainable
-3. **Remember:** Vue directives with `:` or `@` expect JavaScript expressions, not plain text
+3. **Combine `class` and `:class`** - static classes in `class`, dynamic classes in `:class`
+4. **Use `!` to toggle booleans** - enables select/deselect functionality
+5. **Remember:** Vue directives with `:` or `@` expect JavaScript expressions, not plain text
