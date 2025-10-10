@@ -30,8 +30,14 @@
       <!-- :class is shorthand for v-bind:class - dynamically binds CSS classes based on data -->
       <!-- Using ternary operator: if BoxASelected is true, apply both 'demo' and 'active' classes; otherwise, only 'demo' -->
       <!-- The 'active' class styling is defined in the external CSS file -->
-      <div
+      <!-- <div
         :class="BoxASelected ? 'demo active' : 'demo'"
+        @click="boxSelected('A')">
+      </div> -->
+      <!-- Object syntax is more readable than ternary operator - each class and its condition is clear at a glance -->
+      <!-- :class="{className: condition}" - if condition is true, the class is applied -->
+      <div
+        :class="{demo: true, active: boxASelected}"
         @click="boxSelected('A')">
       </div>
       <div class="demo" @click="boxSelected('B')"></div>
