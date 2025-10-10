@@ -17,9 +17,25 @@
       <h1>Vue Dynamic Styling</h1>
     </header>
     <section id="styling">
-      <div class="demo"></div>
-      <div class="demo"></div>
-      <div class="demo"></div>
+      <!-- @ is shorthand for v-on: (Vue event listener) -->
+      <!-- Three demo boxes - each calls boxSelected method with its respective ID ('A', 'B', or 'C') when clicked -->
+      <!-- <div class="demo" style="border-color: red;" @click="boxSelected('A')"></div> -->
+      <!-- :style binds CSS dynamically - if BoxASelected is true, borderColor becomes 'red', otherwise '#ccc' (ternary operator) -->
+      <!-- Ternary operator syntax: condition ? valueIfTrue : valueIfFalse -->
+      <!-- <div
+        class="demo"
+        :style="{borderColor: BoxASelected ? 'red' : '#ccc'}"
+        @click="boxSelected('A')">
+      </div> -->
+      <!-- :class is shorthand for v-bind:class - dynamically binds CSS classes based on data -->
+      <!-- Using ternary operator: if BoxASelected is true, apply both 'demo' and 'active' classes; otherwise, only 'demo' -->
+      <!-- The 'active' class styling is defined in the external CSS file -->
+      <div
+        :class="BoxASelected ? 'demo active' : 'demo'"
+        @click="boxSelected('A')">
+      </div>
+      <div class="demo" @click="boxSelected('B')"></div>
+      <div class="demo" @click="boxSelected('C')"></div>
     </section>
   </body>
 </html>
