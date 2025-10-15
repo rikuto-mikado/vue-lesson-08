@@ -17,12 +17,12 @@
 
 ### 2. Dynamic Inline Styles (`:style`)
 
-#### ❌ Wrong: CSS syntax doesn't work
+#### Wrong: CSS syntax doesn't work
 ```html
 <div :style="border-color: red;"></div>
 ```
 
-#### ✅ Correct: JavaScript object syntax
+#### Correct: JavaScript object syntax
 ```html
 <div :style="{borderColor: 'red'}"></div>
 <div :style="{'border-color': 'red'}"></div>  <!-- kebab-case also works -->
@@ -44,19 +44,19 @@
 | Syntax | Example | Pros | Cons |
 |--------|---------|------|------|
 | **Ternary Operator** | `:class="boxASelected ? 'demo active' : 'demo'"` | Simple for basic cases | Hard to read, repeat class names |
-| **Object Syntax** ✨ | `:class="{demo: true, active: boxASelected}"` | Very readable, maintainable | None |
+| **Object Syntax** (recommended) | `:class="{demo: true, active: boxASelected}"` | Very readable, maintainable | None |
 | **Array Syntax** | `:class="['demo', boxASelected ? 'active' : '']"` | Flexible | Can be verbose |
 
 #### Comparison
 
 ```html
-<!-- ❌ Less readable: Ternary operator -->
+<!-- Less readable: Ternary operator -->
 <div :class="boxASelected ? 'demo active' : 'demo'"></div>
 
-<!-- ✅ More readable: Object syntax -->
+<!-- More readable: Object syntax -->
 <div :class="{demo: true, active: boxASelected}"></div>
 
-<!-- ✨ Best practice: Combine static 'class' with dynamic ':class' -->
+<!-- Best practice: Combine static 'class' with dynamic ':class' -->
 <div class="demo" :class="{active: boxASelected}"></div>
 ```
 
@@ -88,18 +88,110 @@ When you have **static classes** (always applied) and **dynamic classes** (condi
 | Approach | Code |
 |----------|------|
 | Only `:class` | `<div :class="{demo: true, active: boxASelected}"></div>` |
-| Both `class` + `:class` ✨ | `<div class="demo" :class="{active: boxASelected}"></div>` |
+| Both `class` + `:class` (recommended) | `<div class="demo" :class="{active: boxASelected}"></div>` |
 
 ---
 
-### 4. JavaScript Expression Quoting
+### 4. Advanced: Computed Properties for `:class`
+
+For simple conditions, inline object syntax is perfect. But when logic becomes complex, **computed properties** keep templates clean and maintainable.
+
+#### When to Use Each Approach
+
+| Approach | Best For | Example |
+|----------|----------|---------|
+| **Inline Object Syntax** (recommended for simple cases) | Simple conditions (1-2 classes) | `:class="{active: boxASelected}"` |
+| **Computed Property** (recommended for complex cases) | Complex logic, multiple conditions, reusability | `:class="boxAClasses"` |
+
+#### Comparison Example
+
+```html
+<!-- Good: Inline for simple conditions -->
+<div class="demo" :class="{active: boxASelected}"></div>
+
+<!-- Also Good: Computed property for complex logic -->
+<div class="demo" :class="boxAClasses"></div>
+```
+
+```javascript
+// app.js
+computed: {
+    boxAClasses() {
+        return {
+            active: this.boxASelected,
+            highlighted: this.boxASelected && this.isSpecial,
+            disabled: !this.canInteract
+        };
+    }
+}
+```
+
+#### Benefits of Computed Properties
+
+| Benefit | Description | Example |
+|---------|-------------|---------|
+| **Clean Template** | Complex logic moved to JavaScript | Template stays readable even with 5+ class conditions |
+| **Reusability** | Same logic can be used in multiple places | Use `boxAClasses` in multiple divs |
+| **Testability** | Easier to unit test class logic | Test `boxAClasses()` directly in isolation |
+| **Performance** | Vue caches computed values | Recalculates only when dependencies change |
+
+#### Real-World Example: Simple vs Complex
+
+```html
+<!-- Simple condition: Use inline (no computed property needed) -->
+<div class="demo" :class="{active: boxASelected}"></div>
+
+<!-- Complex conditions: Use computed property -->
+<div class="demo" :class="complexClasses"></div>
+```
+
+```javascript
+// Simple: No computed property needed
+data() {
+    return {
+        boxASelected: false
+    };
+}
+
+// Complex: Computed property recommended
+computed: {
+    complexClasses() {
+        return {
+            active: this.boxASelected,
+            'has-error': this.errors.length > 0,
+            'is-loading': this.isLoading,
+            'user-premium': this.user.isPremium,
+            'dark-mode': this.theme === 'dark'
+        };
+    }
+}
+```
+
+#### Decision Tree
+
+```
+Does your class logic have:
+├─ Only 1-2 simple conditions?
+│  └─ Use inline: :class="{active: boxASelected}"
+│
+└─ 3+ conditions OR complex logic?
+   └─ Use computed: :class="computedClasses"
+```
+
+**Bottom Line:** Both methods work perfectly. Choose based on complexity:
+- **Simple** → Inline object syntax (like boxes B and C)
+- **Complex** → Computed property (when you need it)
+
+---
+
+### 5. JavaScript Expression Quoting
 
 #### Why double quotes?
 ```html
-<!-- ❌ Wrong: This won't work -->
+<!-- Wrong: This won't work -->
 <div :class="demo"></div>  <!-- Vue looks for a variable named 'demo' -->
 
-<!-- ✅ Correct: String literal -->
+<!-- Correct: String literal -->
 <div :class="'demo'"></div>  <!-- The 'demo' string is passed -->
 ```
 
@@ -107,7 +199,7 @@ When you have **static classes** (always applied) and **dynamic classes** (condi
 
 ---
 
-### 5. Toggle Boolean Values with `!` (NOT Operator)
+### 6. Toggle Boolean Values with `!` (NOT Operator)
 
 The `!` operator inverts a boolean value:
 
@@ -140,7 +232,7 @@ boxSelected(box) {
 | Approach | Behavior | Code |
 |----------|----------|------|
 | Set to `true` | Click once to select, can't deselect | `this.boxASelected = true` |
-| Toggle with `!` ✨ | Click to select, click again to deselect | `this.boxASelected = !this.boxASelected` |
+| Toggle with `!` (recommended) | Click to select, click again to deselect | `this.boxASelected = !this.boxASelected` |
 
 **Example:**
 ```

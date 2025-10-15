@@ -38,11 +38,22 @@
       <!-- :class="{className: condition}" - if condition is true, the class is applied -->
       <!-- You can use both class and :class together - static classes in 'class', dynamic classes in ':class' -->
       <!-- Here: 'demo' is static (always applied), 'active' is dynamic (depends on boxASelected) -->
-      <div
+      <!-- <div
         class="demo"
         :class="{active: boxASelected}"
         @click="boxSelected('A')">
+      </div> -->
+      <!-- Alternative: Using computed property ':class=boxAClasses' is even better for complex logic -->
+      <!-- Computed properties keep template clean, allow reusability, and make testing easier -->
+      <!-- Example: computed: { boxAClasses() { return { demo: true, active: this.boxASelected } } } -->
+      <div
+        class="demo"
+        :class="boxAClasses"
+        @click="boxSelected('A')">
       </div>
+      <!-- Note: Box B and Box C still work perfectly using the object syntax :class="{active: condition}" -->
+      <!-- Both approaches are valid - computed property (boxAClasses) vs inline object syntax -->
+      <!-- The inline syntax is fine for simple conditions; computed properties shine with complex logic -->
       <div
         class="demo"
         :class="{active: boxBSelected}"

@@ -7,6 +7,13 @@ const app = Vue.createApp({
             boxCSelected: false
         }
     },
+    computed: {
+        boxAClasses() {
+            return {
+                active: this.boxASelected
+            };
+        },
+    },
     methods: {
         // Method to handle box selection - toggles the corresponding box's selected state
         // Using ! (NOT operator) to toggle: if true becomes false, if false becomes true
