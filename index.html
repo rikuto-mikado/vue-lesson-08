@@ -54,9 +54,15 @@
       <!-- Note: Box B and Box C still work perfectly using the object syntax :class="{active: condition}" -->
       <!-- Both approaches are valid - computed property (boxAClasses) vs inline object syntax -->
       <!-- The inline syntax is fine for simple conditions; computed properties shine with complex logic -->
+
+      <!-- Array syntax for :class - allows combining multiple class expressions -->
+      <!-- :class="['static-class', {dynamic: condition}, anotherExpression]" -->
+      <!-- Useful when you need to mix static classes, conditional objects, and computed properties -->
+      <!-- Example: :class="['demo', {active: boxBSelected}]" - 'demo' always applied, 'active' conditionally -->
+      <!-- However, using class="demo" :class="{active: boxBSelected}" is cleaner for this simple case -->
       <div
         class="demo"
-        :class="{active: boxBSelected}"
+        :class="[{active: boxBSelected}]"
         @click="boxSelected('B')">
       </div>
       <div

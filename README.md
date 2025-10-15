@@ -45,9 +45,9 @@
 |--------|---------|------|------|
 | **Ternary Operator** | `:class="boxASelected ? 'demo active' : 'demo'"` | Simple for basic cases | Hard to read, repeat class names |
 | **Object Syntax** (recommended) | `:class="{demo: true, active: boxASelected}"` | Very readable, maintainable | None |
-| **Array Syntax** | `:class="['demo', boxASelected ? 'active' : '']"` | Flexible | Can be verbose |
+| **Array Syntax** | `:class="['demo', boxASelected ? 'active' : '']"` | Flexible, can mix multiple expressions | Can be verbose |
 
-#### Comparison
+#### Comparison: Ternary vs Object
 
 ```html
 <!-- Less readable: Ternary operator -->
@@ -89,6 +89,94 @@ When you have **static classes** (always applied) and **dynamic classes** (condi
 |----------|------|
 | Only `:class` | `<div :class="{demo: true, active: boxASelected}"></div>` |
 | Both `class` + `:class` (recommended) | `<div class="demo" :class="{active: boxASelected}"></div>` |
+
+#### Array Syntax Deep Dive
+
+The **array syntax** allows you to combine multiple class expressions in a single `:class` binding.
+
+**Syntax:**
+```javascript
+:class="[expression1, expression2, expression3, ...]"
+```
+
+**Use Cases:**
+
+| Pattern | Example | When to Use |
+|---------|---------|-------------|
+| **Array with objects** | `:class="[{active: isActive}]"` | Wrapping object syntax in array (works but unnecessary) |
+| **Array with static strings** | `:class="['demo', 'box']"` | Multiple static classes (but `class="demo box"` is cleaner) |
+| **Array with ternary** | `:class="['demo', isActive ? 'active' : '']"` | Mix static and conditional classes |
+| **Array mixing everything** | `:class="['demo', {active: isActive}, computedClass]"` | Complex scenarios with static, object, and computed |
+
+**Practical Examples:**
+
+```html
+<!-- Example 1: Object wrapped in array (works but not recommended) -->
+<div class="demo" :class="[{active: boxBSelected}]"></div>
+
+<!-- Example 2: Better - just use object syntax directly -->
+<div class="demo" :class="{active: boxBSelected}"></div>
+
+<!-- Example 3: Array with ternary -->
+<div :class="['demo', boxBSelected ? 'active' : '']"></div>
+
+<!-- Example 4: Array mixing static, object, and ternary -->
+<div :class="['demo', {active: boxBSelected}, isSpecial ? 'special' : '']"></div>
+
+<!-- Example 5: Array with multiple objects -->
+<div :class="[{active: isActive}, {disabled: isDisabled}, {loading: isLoading}]"></div>
+```
+
+**When to Use Array Syntax:**
+
+```
+Do you need to:
+├─ Apply only static classes?
+│  └─ Use: class="demo box" (simple HTML attribute)
+│
+├─ Apply conditional classes with simple logic?
+│  └─ Use: :class="{active: isActive}" (object syntax)
+│
+├─ Mix static strings with computed properties?
+│  └─ Use: :class="['base', computedClass]" (array syntax)
+│
+└─ Combine multiple different expression types?
+   └─ Use: :class="['static', {dynamic: condition}, computed]" (array syntax)
+```
+
+**Comparison:**
+
+```html
+<!-- Object syntax (recommended for simple cases) -->
+<div class="demo" :class="{active: boxBSelected}"></div>
+
+<!-- Array with object (same result, more verbose) -->
+<div class="demo" :class="[{active: boxBSelected}]"></div>
+
+<!-- Array combining multiple things (useful for complex cases) -->
+<div :class="['demo', {active: boxBSelected}, themeClass, sizeClass]"></div>
+```
+
+**Real-World Complex Example:**
+
+```javascript
+// When array syntax really shines
+<div :class="[
+  'button',
+  `button-${size}`,
+  {
+    'button-active': isActive,
+    'button-disabled': isDisabled
+  },
+  themeClass,
+  customClass
+]"></div>
+```
+
+**Bottom Line:**
+- **Simple cases:** Use object syntax `:class="{active: condition}"`
+- **Complex cases:** Use array syntax when mixing static strings, objects, and computed properties
+- **Most cases:** Object syntax is cleaner and more readable
 
 ---
 
