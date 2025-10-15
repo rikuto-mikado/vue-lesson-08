@@ -61,8 +61,7 @@
       <!-- Example: :class="['demo', {active: boxBSelected}]" - 'demo' always applied, 'active' conditionally -->
       <!-- However, using class="demo" :class="{active: boxBSelected}" is cleaner for this simple case -->
       <div
-        class="demo"
-        :class="[{active: boxBSelected}]"
+        :class="['demo', {active: boxBSelected}]"
         @click="boxSelected('B')">
       </div>
       <div
